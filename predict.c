@@ -124,7 +124,7 @@ static PyObject *PredictException;
         deterministic. (remove when finished along with (2) call sites)
 */
 char debug_freeze_time = 0;
-struct tm debug_frozen_tm = { tm_year: 114, tm_mon: 10, tm_mday: 2 };
+struct tm debug_frozen_tm = { .tm_year= 114, .tm_mon= 10, .tm_mday= 2 };
 
 // This struct represents an observation of a particular satellite
 // from a particular reference point (on earth) at a particular time
@@ -2422,7 +2422,7 @@ double ReadBearing(char *input)
 
 char ReadTLE(char *line0, char *line1, char *line2)
 {
-	int la, lb, lc;
+	unsigned long la, lb, lc;
 	char error_flags,a,b,c,d;
 
 	la = strnlen(line0,sizeof(sat.name));
@@ -3322,7 +3322,7 @@ int MakeObservation(double obs_time, struct observation * obs) {
 }
 
 void PrintObservation(struct observation * obs) {
-    printf("NORAD_ID        %d\n", obs->norad_id);
+    printf("NORAD_ID        %ld\n", obs->norad_id);
     printf("Name            %s\n", obs->name);
     printf("Date(epoch)     %f\n", obs->epoch);
     printf("Latitude(N)     %f\n", obs->latitude);
@@ -3347,7 +3347,7 @@ void PrintObservation(struct observation * obs) {
 
 PyObject * PythonifyObservation(observation * obs) {
 	//TODO: Add reference count?
-	return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d}",
+	return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d}",
 		"norad_id", obs->norad_id,
 		"name", obs->name,
 		"epoch", obs->epoch,
@@ -3371,9 +3371,7 @@ PyObject * PythonifyObservation(observation * obs) {
 		"doppler", obs->doppler
 	);
 }
-
-char load(PyObject *args)
-{
+char load(PyObject *args) {
 	//TODO: Not threadsafe, detect and raise warning?
 	int x;
 	char *env=NULL;
@@ -3580,18 +3578,58 @@ static PyMethodDef pypredict_funcs[] = {
     {NULL, NULL, 0, NULL} 
 };
 
-void initcpredict(void)
-{
-	PyObject *m;
-	m = Py_InitModule3("cpredict", pypredict_funcs,
-					"Python port of the predict open source satellite tracking library");
-	if (m == NULL) {
-		fprintf(stderr, "ERROR: Unable to initialize python module 'cpredict'\n");
-	}
 
-	//Add custom exception for predict
-	PredictException = PyErr_NewException("cpredict.PredictException", NULL, NULL);
-	Py_INCREF(PredictException);
-	PyModule_AddObject(m, "PredictException", PredictException);
+struct module_state {
+        PyObject *error;
+};
+
+#if PY_MAJOR_VERSION >= 3
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+#else
+#define GETSTATE(m) (&_state)
+static struct module_state _state;
+#endif
+
+static int cpredict_traverse(PyObject *m, visitproc visit, void *arg) {
+    Py_VISIT(GETSTATE(m)->error);
+    return 0;
+
 }
 
+static int cpredict_clear(PyObject *m) {
+    Py_CLEAR(GETSTATE(m)->error);
+    return 0;
+
+}
+
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "cpredict",
+    "Python port of the predict open source satellite tracking library",
+    sizeof(struct module_state),
+    pypredict_funcs,
+    NULL,
+    cpredict_traverse,
+    cpredict_clear,
+    NULL
+
+};
+
+#define INITERROR return NULL
+
+PyObject * PyInit_cpredict(void) {
+    PyObject *module = PyModule_Create(&moduledef);
+    if (module == NULL) {
+       // INITERROR;
+        fprintf(stderr, "ERROR: Unable to initialize python module 'cpredict'\n");
+    }
+    struct module_state *st = GETSTATE(module);
+    st->error = PyErr_NewException("cpredict.PredictException", NULL, NULL);
+    if (st->error == NULL) {
+        Py_DECREF(module);
+        INITERROR;
+    }
+    Py_INCREF(st->error);
+    PyModule_AddObject(module, "PredictException", st->error);
+    return module;
+}
