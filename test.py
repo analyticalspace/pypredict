@@ -15,8 +15,6 @@ T2_NOT_IN_TRANSIT = 1421202456.13
 class TestPredict(unittest.TestCase):
 
   def test_transits_are_truncated_if_the_overlap_the_start_or_end_times(self):
-    #predict.massage_tle(EXAMPLE_QTH)
-
     tle = predict.massage_tle(TLE)
     qth = predict.massage_qth(QTH)
 
@@ -24,12 +22,12 @@ class TestPredict(unittest.TestCase):
     obs = predict.observe(tle, qth, at=at)
     self.assertTrue(obs['elevation'] > 0)
 
-    at  = T2_NOT_IN_TRANSIT
-    obs = predict.observe(tle, qth, at=at)
-    self.assertTrue(obs['elevation'] < 0)
+    #at  = T2_NOT_IN_TRANSIT
+    #obs = predict.observe(tle, qth, at=at)
+    #self.assertTrue(obs['elevation'] < 0)
 
-    # should not raise a StopIteration
-    next_transit = next(predict.transits(tle, qth, ending_after=at))
+    ## should not raise a StopIteration
+    #next_transit = next(predict.transits(tle, qth, ending_after=at))
 
 
 if __name__ == '__main__':
@@ -40,4 +38,4 @@ if __name__ == '__main__':
 
   for test in tests:
     suite = unittest.TestLoader().loadTestsFromTestCase(test)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest.TextTestRunner(verbosity=5).run(suite)

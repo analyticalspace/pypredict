@@ -44,7 +44,7 @@
 #define e6a		1.0E-6
 #define tothrd		6.6666666666666666E-1	/* 2/3 */
 #define xj2		1.0826158E-3		/* J2 Harmonic (WGS '72) */
-#define xj3		-2.53881E-6		/* J3 Harmonic (WGS '72) */   
+#define xj3		-2.53881E-6		/* J3 Harmonic (WGS '72) */
 #define xj4		-1.65597E-6		/* J4 Harmonic (WGS '72) */
 #define xke		7.43669161E-2
 #define xkmper		6.378137E3		/* WGS 84 Earth radius km */
@@ -120,7 +120,7 @@ static PyObject *PredictException;
 
 /*
   TODO: This is a refactoring hack to ensure we get consistent before/after
-        tests.  Freezes the clock to a specified time, making calculations 
+        tests.  Freezes the clock to a specified time, making calculations
         deterministic. (remove when finished along with (2) call sites)
 */
 char debug_freeze_time = 0;
@@ -227,7 +227,7 @@ typedef struct	{
 			   xnodeo, eo, omegao, xmo, xno;
  		   int	   catnr, elset, revnum;
  		   char	   sat_name[25], idesg[9];
-		}  tle_t; 
+		}  tle_t;
 
 /* Geodetic position structure used by SGP4/SDP4 code. */
 
@@ -247,10 +247,10 @@ typedef struct	{
 		   	   /* Used by dpinit part of Deep() */
 		   double  eosq, sinio, cosio, betao, aodp, theta2,
 			   sing, cosg, betao2, xmdot, omgdot, xnodot, xnodp;
-	   
+
 			   /* Used by dpsec and dpper parts of Deep() */
 		   double  xll, omgadf, xnode, em, xinc, xn, t;
-    
+
 		 	   /* Used by thetg and Deep() */
 		   double  ds50;
 		}  deep_arg_t;
@@ -295,12 +295,12 @@ int Sign(double arg)
 	{
 		return 1;
 	}
-		
+
 	else if (arg<0)
 	{
 		return -1;
 	}
-		
+
 	else
 	{
 		return 0;
@@ -385,7 +385,7 @@ void Scalar_Multiply(double k, vector_t *v1, vector_t *v2)
 }
 
 void Scale_Vector(double k, vector_t *v)
-{ 
+{
 	/* Multiplies the vector v1 by the scalar k */
 	v->x*=k;
 	v->y*=k;
@@ -520,7 +520,7 @@ double Int(double arg)
 void Convert_Sat_State(vector_t *pos, vector_t *vel)
 {
 	/* Converts the satellite's position and velocity  */
-	/* vectors from normalized values to km and km/sec */ 
+	/* vectors from normalized values to km and km/sec */
 	Scale_Vector(xkmper, pos);
 	Scale_Vector(xkmper*xmnpda/secday, vel);
 }
@@ -551,7 +551,7 @@ double Julian_Date_of_Year(double year)
 }
 
 double Julian_Date_of_Epoch(double epoch)
-{ 
+{
 	/* The function Julian_Date_of_Epoch returns the Julian Date of     */
 	/* an epoch specified in the format used in the NORAD two-line      */
 	/* element sets. It has been modified to support dates beyond       */
@@ -588,7 +588,7 @@ int DOY (int yr, int mo, int dy)
 	int i, day;
 
 	day=0;
-	
+
 	for (i=0; i<mo-1; i++ )
 	{
 	    day+=days[i];
@@ -652,7 +652,7 @@ double Delta_ET(double year)
 	/* This function is based on a least squares fit of data from 1950 */
 	/* to 1991 and will need to be updated periodically. */
 
-	/* Values determined using data from 1950-1991 in the 1990 
+	/* Values determined using data from 1950-1991 in the 1990
 	Astronomical Almanac.  See DELTA_ET.WQ1 for details. */
 
 	double delta_et;
@@ -821,7 +821,7 @@ void SGP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 	/* of near-earth (period < 225 minutes) satellites. tsince is   */
 	/* time since epoch in minutes, tle is a pointer to a tle_t     */
 	/* structure with Keplerian orbital elements and pos and vel    */
-	/* are vector_t structures returning ECI satellite position and */ 
+	/* are vector_t structures returning ECI satellite position and */
 	/* velocity. Use Convert_Sat_State() to convert to km and km/s. */
 
 	static double aodp, aycof, c1, c4, c5, cosio, d2, d3, d4, delmo,
@@ -961,7 +961,7 @@ void SGP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 	tempa=1-c1*tsince;
 	tempe=tle->bstar*c4*tsince;
 	templ=t2cof*tsq;
-    
+
 	if (isFlagClear(SIMPLE_FLAG))
 	{
 		delomg=omgcof*tsince;
@@ -1004,12 +1004,12 @@ void SGP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 		temp5=axn*cosepw;
 		temp6=ayn*sinepw;
 		epw=(capu-temp4+temp3-temp2)/(1-temp5-temp6)+temp2;
-	  
+
 		if (fabs(epw-temp2)<= e6a)
 		{
 			break;
 		}
-	      
+
 		temp2=epw;
 
 	} while (i++<10);
@@ -1070,7 +1070,7 @@ void SGP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 
 	/* Phase in radians */
 	phase=xlt-xnode-omgadf+twopi;
-    
+
 	if (phase<0.0)
 	{
 		phase+=twopi;
@@ -1120,7 +1120,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 
 		/* Initialize lunar solar terms */
 		day=deep_arg->ds50+18261.5;  /* Days since 1900 Jan 0.5 */
-	  
+
 		if (day!=preep)
 		{
 			preep=day;
@@ -1160,7 +1160,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 
 		  /* Loop breaks when Solar terms are done a second */
 		  /* time, after Lunar terms are initialized        */
-	  
+
 		for (;;)
 		{
 			/* Solar terms done again after Lunar terms are done */
@@ -1209,12 +1209,12 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 			sl=-zn*s3*(z1+z3-14-6*deep_arg->eosq);
 			sgh=s4*zn*(z31+z33-6);
 			sh=-zn*s2*(z21+z23);
-		
+
 			if (xqncl<5.2359877E-2)
 			{
 				sh=0;
 			}
-		    
+
 			ee2=2*s1*s6;
 			e3=2*s1*s7;
 			xi2=2*s2*z12;
@@ -1280,16 +1280,16 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 			{
 			    return;
 			}
-	
+
 			if (eq<0.5)
 			{
 			    return;
 			}
-	
+
 			SetFlag(RESONANCE_FLAG);
 			eoc=eq*deep_arg->eosq;
 			g201=-0.306-(eq-0.64)*0.440;
-		
+
 			if (eq<=0.65)
 			{
 				g211=3.616-13.247*eq+16.290*deep_arg->eosq;
@@ -1299,7 +1299,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 				g422=-146.407+841.880*eq-1629.014*deep_arg->eosq+1083.435 * eoc;
 				g520=-532.114+3017.977*eq-5740*deep_arg->eosq+3708.276*eoc;
 			}
-		
+
 			else
 			{
 				g211=-72.099+331.819*eq-508.738*deep_arg->eosq+266.724*eoc;
@@ -1307,12 +1307,12 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 				g322=-342.585+1554.908*eq-2366.899*deep_arg->eosq+1215.972*eoc;
 				g410=-1052.797+4758.686*eq-7193.992*deep_arg->eosq+3651.957*eoc;
 				g422=-3581.69+16178.11*eq-24462.77*deep_arg->eosq+12422.52*eoc;
-		      
+
 				if (eq<=0.715)
 				{
 					g520=1464.74-4664.75*eq+3763.64*deep_arg->eosq;
 				}
-			  
+
 				else
 				{
 					g520=-5149.66+29936.92*eq-54087.36*deep_arg->eosq+31324.56*eoc;
@@ -1325,7 +1325,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 				g521=-822.71072+4568.6173*eq-8491.4146*deep_arg->eosq+5337.524*eoc;
 				g532=-853.666+4690.25*eq-8624.77*deep_arg->eosq+5341.4*eoc;
 			}
-		
+
 			else
 			{
 				g533=-37995.78+161616.52*eq-229838.2*deep_arg->eosq+109377.94*eoc;
@@ -1369,12 +1369,12 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 			bfact=deep_arg->xmdot+deep_arg->xnodot+deep_arg->xnodot-thdt-thdt;
 			bfact=bfact+ssl+ssh+ssh;
 		}
-	
+
 		else
 		{
 			SetFlag(RESONANCE_FLAG);
 			SetFlag(SYNCHRONOUS_FLAG);
-	
+
 			/* Synchronous resonance terms initialization */
 			g200=1+deep_arg->eosq*(-2.5+0.8125*deep_arg->eosq);
 			g310=1+2*deep_arg->eosq;
@@ -1413,14 +1413,14 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 		deep_arg->xnode=deep_arg->xnode+ssh*deep_arg->t;
 		deep_arg->em=tle->eo+sse*deep_arg->t;
 		deep_arg->xinc=tle->xincl+ssi*deep_arg->t;
-	  
+
 		if (deep_arg->xinc<0)
 		{
 			deep_arg->xinc=-deep_arg->xinc;
 			deep_arg->xnode=deep_arg->xnode+pi;
 			deep_arg->omgadf=deep_arg->omgadf-pi;
 		}
-	
+
 		if (isFlagClear(RESONANCE_FLAG))
 		{
 		      return;
@@ -1460,7 +1460,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 					}
 				}
 			}
-	    
+
 			do
 			{
 				if (fabs(deep_arg->t-atime)>=stepp)
@@ -1468,7 +1468,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 					SetFlag(DO_LOOP_FLAG);
 					ClearFlag(EPOCH_RESTART_FLAG);
 				}
-		
+
 				else
 				{
 					ft=deep_arg->t-atime;
@@ -1495,7 +1495,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 					xndot=del1*sin(xli-fasx2)+del2*sin(2*(xli-fasx4))+del3*sin(3*(xli-fasx6));
 					xnddt=del1*cos(xli-fasx2)+2*del2*cos(2*(xli-fasx4))+3*del3*cos(3*(xli-fasx6));
 				}
-		
+
 				else
 				{
 					xomi=omegaq+deep_arg->omgdot*atime;
@@ -1578,7 +1578,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 			deep_arg->xnode=deep_arg->xnode+ph;
 			deep_arg->xll=deep_arg->xll+pl;
 		}
-	
+
 		else
 		{
 			/* Apply periodics with Lyddane modification */
@@ -1599,7 +1599,7 @@ void Deep(int ientry, tle_t * tle, deep_arg_t * deep_arg)
 
 			/* This is a patch to Lyddane modification */
 			/* suggested by Rob Matson. */
-		
+
 			if (fabs(xnoh-deep_arg->xnode)>pi)
 			{
 				if (deep_arg->xnode<xnoh)
@@ -1652,7 +1652,7 @@ void SDP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 
 		/* Recover original mean motion (xnodp) and   */
 		/* semimajor axis (aodp) from input elements. */
-	  
+
 		a1=pow(xke/tle->xno,tothrd);
 		deep_arg.cosio=cos(tle->xincl);
 		deep_arg.theta2=deep_arg.cosio*deep_arg.cosio;
@@ -1668,11 +1668,11 @@ void SDP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 
 		/* For perigee below 156 km, the values */
 		/* of s and qoms2t are altered.         */
-	  
+
 		s4=s;
 		qoms24=qoms2t;
 		perigee=(deep_arg.aodp*(1-tle->eo)-ae)*xkmper;
-	  
+
 		if (perigee<156.0)
 		{
 			if (perigee<=98.0)
@@ -1683,7 +1683,7 @@ void SDP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 			{
 				s4=perigee-78.0;
 			}
-	
+
 			qoms24=pow((120-s4)*ae/xkmper,4);
 			s4=s4/xkmper+ae;
 		}
@@ -1778,14 +1778,14 @@ void SDP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 		temp5=axn*cosepw;
 		temp6=ayn*sinepw;
 		epw=(capu-temp4+temp3-temp2)/(1-temp5-temp6)+temp2;
-	  
+
 		if (fabs(epw-temp2)<=e6a)
 		{
 			break;
 		}
 
 		temp2=epw;
-	  
+
 	} while (i++<10);
 
 	/* Short period preliminary quantities */
@@ -1856,10 +1856,10 @@ void SDP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 		ay=cx*sin(xnodek)+cy*cos(xnodek);
 		az=cz;
 	}
-	
+
 	/* Phase in radians */
 	phase=xlt-deep_arg.xnode-deep_arg.omgadf+twopi;
-    
+
 	if (phase<0.0)
 	{
 		phase+=twopi;
@@ -1977,7 +1977,7 @@ void Calculate_Obs(double time, vector_t *pos, vector_t *vel, geodetic_t *geodet
 	top_z=cos_lat*cos_theta*range.x+cos_lat*sin_theta*range.y+sin_lat*range.z;
 	azim=atan(-top_e/top_s); /* Azimuth */
 
-	if (top_s>0.0) 
+	if (top_s>0.0)
 	{
 		azim=azim+pi;
 	}
@@ -2252,7 +2252,7 @@ void Data2TLE(int x)
 	/* This function converts orbital data held in the numeric
 	   portion of the sat tle structure to ASCII TLE format,
 	   and places the result in ASCII portion of the structure. */
- 
+
 	int i;
 	char string[15], line1[70], line2[70];
 	unsigned sum;
@@ -2307,12 +2307,12 @@ void Data2TLE(int x)
 
 	sprintf(string,"%9.4f",sat.incl);
 	CopyString(string,line2,7,15);
-				
+
 	sprintf(string,"%9.4f",sat.raan);
 	CopyString(string,line2,16,24);
 
 	sprintf(string,"%13.12f",sat.eccn);
-	
+
 	/* Erase eccentricity's decimal point */
 
 	for (i=2; i<=9; string[i-2]=string[i], i++);
@@ -2358,7 +2358,7 @@ double ReadBearing(char *input)
 	   extra spaces found either leading, trailing, or
 	   embedded within the numbers expressed in the
 	   input string.  Decimal seconds are permitted. */
- 
+
 	char string[20];
 	double bearing=0.0, seconds;
 	int a, b, length, degrees, minutes;
@@ -2375,7 +2375,7 @@ double ReadBearing(char *input)
 		{
 			string[b]=input[a];
 			b++;
-		}	 
+		}
 	}
 
 	string[b]=0;
@@ -2533,7 +2533,7 @@ void SaveQTH()
 {
 	/* This function saves QTH data to the QTH data file. */
 
-	FILE *fd;	
+	FILE *fd;
 
 	fd=fopen(qthfile,"w");
 
@@ -2557,7 +2557,7 @@ void SaveTLE()
 
 	/* Write name, line1, line2 to predict.tle */
 
-	fprintf(fd,"%s\n", sat.name);  
+	fprintf(fd,"%s\n", sat.name);
 	fprintf(fd,"%s\n", sat.line1);
 	fprintf(fd,"%s\n", sat.line2);
 
@@ -2572,9 +2572,9 @@ long DayNum(int m, int d, int y)
 	double mm, yy;
 
 	if (m<3)
-	{ 
-		y--; 
-		m+=12; 
+	{
+		y--;
+		m+=12;
 	}
 
 	if (y<57)
@@ -2676,7 +2676,7 @@ void FindMoon(double daynum)
 	ff=11.250889+483202.0251*t-0.003211*t2-0.0000003*t3;
 	om=259.183275-1934.142*t+0.002078*t2+0.0000022*t3;
 	om=om*deg2rad;
-	
+
 	/* Additive terms */
 
 	l1=l1+0.000233*sin((51.2+20.2*t)*deg2rad);
@@ -2711,10 +2711,10 @@ void FindMoon(double daynum)
 	l=l+0.058793*sin(2.0*d-2.0*m1)+ex*0.057212*sin(2.0*d-m-m1)+0.05332*sin(2.0*d+m1);
 	l=l+ex*0.045874*sin(2.0*d-m)+ex*0.041024*sin(m1-m)-0.034718*sin(d);
 	l=l-ex*0.030465*sin(m+m1)+0.015326*sin(2.0*d-2.0*ff)-0.012528*sin(2.0*ff+m1);
-	
+
 	l=l-0.01098*sin(2.0*ff-m1)+0.010674*sin(4.0*d-m1)+0.010034*sin(3.0*m1);
 	l=l+0.008548*sin(4.0*d-2.0*m1)-ex*0.00791*sin(m-m1+2.0*d)-ex*0.006783*sin(2.0*d+m);
-	
+
 	l=l+0.005162*sin(m1-d)+ex*0.005*sin(m+d)+ex*0.004049*sin(m1-m+2.0*d);
 	l=l+0.003996*sin(2.0*m1+2.0*d)+0.003862*sin(4.0*d)+0.003665*sin(2.0*d-3.0*m1);
 
@@ -2792,7 +2792,7 @@ void FindMoon(double daynum)
 	ob=ob*deg2rad;
 	dec=asin(sin(b)*cos(ob)+cos(b)*sin(ob)*sin(lm));
 	ra=acos(cos(b)*cos(lm)/cos(dec));
-	
+
 	if (lm>pi)
 	{
 		ra=twopi-ra;
@@ -2871,7 +2871,7 @@ void FindSun(double daynum)
 
 	Calculate_Solar_Position(jul_utc, &solar_vector);
 	Calculate_Obs(jul_utc, &solar_vector, &zero_vector, &obs_geodetic, &solar_set);
-	sun_azi=Degrees(solar_set.x); 
+	sun_azi=Degrees(solar_set.x);
 	sun_ele=Degrees(solar_set.y);
 	sun_range=1.0+((solar_set.z-AU)/AU);
 	sun_range_rate=1000.0*solar_set.w;
@@ -2918,7 +2918,7 @@ void PreCalc(int x)
 	{
 		calc_squint=0;
 	}
- 
+
 	/* Clear all flags */
 
 	ClearFlag(ALL_FLAGS);
@@ -3049,7 +3049,7 @@ void Calc()
 
 	rv=(long)floor((tle.xno*xmnpda/twopi+age*tle.bstar*ae)*age+tle.xmo/twopi)+tle.revnum;
 
-	sun_azi=Degrees(solar_set.x); 
+	sun_azi=Degrees(solar_set.x);
 	sun_ele=Degrees(solar_set.y);
 
 	irk=(long)rint(sat_range);
@@ -3141,7 +3141,7 @@ char Geostationary(int x)
 	/* This function returns a 1 if the satellite pointed
 	   to by "x" appears to be in a geostationary orbit */
 
-	if (fabs(sat.meanmo-1.0027)<0.0002) 
+	if (fabs(sat.meanmo-1.0027)<0.0002)
 	{
 		return 1;
 	}
@@ -3347,7 +3347,11 @@ void PrintObservation(struct observation * obs) {
 
 PyObject * PythonifyObservation(observation * obs) {
 	//TODO: Add reference count?
+#if PY_MAJOR_VERSION >= 3
 	return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d}",
+#else
+	return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d}",
+#endif
 		"norad_id", obs->norad_id,
 		"name", obs->name,
 		"epoch", obs->epoch,
@@ -3460,6 +3464,7 @@ static PyObject* quick_predict(PyObject* self, PyObject *args)
 	observation obs = { 0 };
 
 	PyObject* transit = PyList_New(0);
+
 	if (transit == NULL)
 	{
 		goto cleanup_and_raise_exception;
@@ -3483,6 +3488,7 @@ static PyObject* quick_predict(PyObject* self, PyObject *args)
 
 	PreCalc(0);
 	Calc();
+
 	if (MakeObservation(daynum, &obs) != 0)
 	{
 		// MakeObservation will set appropriate exception string
@@ -3512,9 +3518,10 @@ static PyObject* quick_predict(PyObject* self, PyObject *args)
 
 	/* Make Predictions */
 	daynum=FindAOS();
-	
+
 	/* Construct the pass */
 	PyObject * py_obs;
+
 	while (iel>=0)
 	{
 		if (MakeObservation(daynum, &obs) != 0)
@@ -3524,8 +3531,10 @@ static PyObject* quick_predict(PyObject* self, PyObject *args)
 		}
 
 		py_obs = PythonifyObservation(&obs);
+
 		if (py_obs == NULL) {
-			//PythonifyObservation will set appropriate exception string
+            sprintf(errbuff, "Failed to PythonifyObservation. Cannot calculate transit.\n");
+            PyErr_SetString(PredictException, errbuff);
 			goto cleanup_and_raise_exception;
 		}
 
@@ -3533,6 +3542,7 @@ static PyObject* quick_predict(PyObject* self, PyObject *args)
 		{
 			goto cleanup_and_raise_exception;
 		}
+
 		lastel=iel;
 		daynum+=cos((sat_ele-1.0)*deg2rad)*sqrt(sat_alt)/25000.0;
 		Calc();
@@ -3541,20 +3551,22 @@ static PyObject* quick_predict(PyObject* self, PyObject *args)
 	if (lastel!=0)
 	{
 		daynum=FindLOS();
-		//TODO: FindLOS can fail.  Detect and log warning that transit end is approximate.	
+		//TODO: FindLOS can fail.  Detect and log warning that transit end is approximate.
 		if (daynum > 0) {
 			Calc();
-	
+
 			if (MakeObservation(daynum, &obs) != 0)
 			{
 				goto cleanup_and_raise_exception;
 			}
-	
+
 			py_obs = PythonifyObservation(&obs);
-			if (py_obs == NULL) {
+			
+            if (py_obs == NULL) {
+                sprintf(errbuff, "Failed to PythonifyObservation. Cannot calculate transit.\n");
 				goto cleanup_and_raise_exception;
 			}
-	
+
 			if (PyList_Append(transit, py_obs) != 0)
 			{
 				goto cleanup_and_raise_exception;
@@ -3565,6 +3577,8 @@ static PyObject* quick_predict(PyObject* self, PyObject *args)
 	return transit;
 
 cleanup_and_raise_exception:
+    sprintf(errbuff, "UNKNOWN ERROR\n");
+    PyErr_SetString(PredictException, errbuff);
 	Py_XDECREF(transit);
 	return NULL;
 }
@@ -3575,61 +3589,75 @@ static char quick_predict_docs[] =
 static PyMethodDef pypredict_funcs[] = {
     {"quick_find"   , (PyCFunction)quick_find   , METH_VARARGS, quick_find_docs},
     {"quick_predict", (PyCFunction)quick_predict, METH_VARARGS, quick_predict_docs},
-    {NULL, NULL, 0, NULL} 
-};
-
-
-struct module_state {
-        PyObject *error;
+    {NULL, NULL, 0, NULL}
 };
 
 #if PY_MAJOR_VERSION >= 3
-#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+    struct module_state {
+        PyObject *error;
+    };
+
+#   define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+
+    static int cpredict_traverse(PyObject *m, visitproc visit, void *arg) {
+        Py_VISIT(GETSTATE(m)->error);
+        return 0;
+    }
+
+    static int cpredict_clear(PyObject *m) {
+        Py_CLEAR(GETSTATE(m)->error);
+        return 0;
+    }
+
+    static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "cpredict",
+        "Python port of the predict open source satellite tracking library",
+        sizeof(struct module_state),
+        pypredict_funcs,
+        NULL,
+        cpredict_traverse,
+        cpredict_clear,
+        NULL
+    };
+
+    PyMODINIT_FUNC
+    PyInit_cpredict(void)
+    {
+        PyObject *module = PyModule_Create(&moduledef);
+
+        if (module == NULL) {
+            fprintf(stderr, "ERROR: Unable to initialize python module 'cpredict'\n");
+            return NULL;
+        }
+
+        GETSTATE(module)->error = PyErr_NewException("cpredict.PredictException", NULL, NULL);
+
+        if (GETSTATE(module)->error == NULL) {
+            Py_DECREF(module);
+            return NULL;
+        }
+
+        Py_INCREF(GETSTATE(module)->error);
+        PyModule_AddObject(module, "PredictException", GETSTATE(module)->error);
+
+        return module;
+    }
 #else
-#define GETSTATE(m) (&_state)
-static struct module_state _state;
+    void initcpredict(void)
+    {
+        PyObject *m;
+        m = Py_InitModule3("cpredict", pypredict_funcs,
+                        "Python port of the predict open source satellite tracking library");
+
+        if (m == NULL) {
+            fprintf(stderr, "ERROR: Unable to initialize python module 'cpredict'\n");
+        }
+
+        //Add custom exception for predict
+        PredictException = PyErr_NewException("cpredict.PredictException", NULL, NULL);
+        Py_INCREF(PredictException);
+        PyModule_AddObject(m, "PredictException", PredictException);
+    }
 #endif
 
-static int cpredict_traverse(PyObject *m, visitproc visit, void *arg) {
-    Py_VISIT(GETSTATE(m)->error);
-    return 0;
-
-}
-
-static int cpredict_clear(PyObject *m) {
-    Py_CLEAR(GETSTATE(m)->error);
-    return 0;
-
-}
-
-static struct PyModuleDef moduledef = {
-    PyModuleDef_HEAD_INIT,
-    "cpredict",
-    "Python port of the predict open source satellite tracking library",
-    sizeof(struct module_state),
-    pypredict_funcs,
-    NULL,
-    cpredict_traverse,
-    cpredict_clear,
-    NULL
-
-};
-
-#define INITERROR return NULL
-
-PyObject * PyInit_cpredict(void) {
-    PyObject *module = PyModule_Create(&moduledef);
-    if (module == NULL) {
-       // INITERROR;
-        fprintf(stderr, "ERROR: Unable to initialize python module 'cpredict'\n");
-    }
-    struct module_state *st = GETSTATE(module);
-    st->error = PyErr_NewException("cpredict.PredictException", NULL, NULL);
-    if (st->error == NULL) {
-        Py_DECREF(module);
-        INITERROR;
-    }
-    Py_INCREF(st->error);
-    PyModule_AddObject(module, "PredictException", st->error);
-    return module;
-}
