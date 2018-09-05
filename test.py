@@ -2,7 +2,7 @@
 
 import unittest, time
 import predict
-from cpredict import quick_find, quick_predict, PredictException
+from cpredict import quick_find, quick_predict
 
 # fetched from http://tle.spire.com/40044
 TLE = "0 LEMUR 1\n1 40044U 14033AL  15013.74135905  .00002013  00000-0  31503-3 0  6119\n2 40044 097.9584 269.2923 0059425 258.2447 101.2095 14.72707190 30443"
@@ -22,12 +22,12 @@ class TestPredict(unittest.TestCase):
     obs = predict.observe(tle, qth, at=at)
     self.assertTrue(obs['elevation'] > 0)
 
-    #at  = T2_NOT_IN_TRANSIT
-    #obs = predict.observe(tle, qth, at=at)
-    #self.assertTrue(obs['elevation'] < 0)
+    at  = T2_NOT_IN_TRANSIT
+    obs = predict.observe(tle, qth, at=at)
+    self.assertTrue(obs['elevation'] < 0)
 
-    ## should not raise a StopIteration
-    #next_transit = next(predict.transits(tle, qth, ending_after=at))
+    # should not raise a StopIteration
+    next_transit = next(predict.transits(tle, qth, ending_after=at))
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import os
 import time
 from copy import copy
-from cpredict import quick_find, quick_predict, PredictException
+from cpredict import quick_find, quick_predict
 
 try:
     basestring
@@ -16,7 +16,7 @@ def host_qth(path="~/.predict/predict.qth"):
             assert len(raw)== 4, "must match:\nname\nlat(N)\nlong(W)\nalt"%path
             return massage_qth(raw[1:])
     except Exception as e:
-        raise PredictException("Unable to process qth '%s' (%s)"%(path, e))
+        raise RuntimeError("Unable to process qth '%s' (%s)"%(path, e))
 
 def massage_tle(tle):
     try:
@@ -27,16 +27,16 @@ def massage_tle(tle):
         return tle
         #TODO: print a warning if TLE is 'too' old
     except Exception as e:
-        raise PredictException(e)
+        raise RuntimeError(e)
 
 def massage_qth(qth):
     try:
         assert len(qth) == 3, "%s must consist of exactly three elements: (lat(N), long(W), alt(m))" % qth
         return (float(qth[0]), float(qth[1]), int(qth[2]))
     except ValueError as e:
-        raise PredictException("Unable to convert '%s' (%s)" % (qth, e))
+        raise RuntimeError("Unable to convert '%s' (%s)" % (qth, e))
     except Exception as e:
-        raise PredictException(e)
+        raise RuntimeError(e)
 
 def observe(tle, qth, at=None):
     tle = massage_tle(tle)
@@ -148,5 +148,5 @@ class Transit():
 
     def at(self, t):
         if t < self.start or t > self.end:
-            raise PredictException("time %f outside transit [%f, %f]" % (t, self.start, self.end))
+            raise RuntimeError("time %f outside transit [%f, %f]" % (t, self.start, self.end))
         return observe(self.tle, self.qth, t)
