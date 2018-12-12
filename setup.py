@@ -8,5 +8,5 @@ setup(
     author_email="jesse@spire.com",
     url="https://github.com/nsat/pypredict",
     py_modules=['predict'],
-    ext_modules=[Extension('cpredict', ['predict.c'])]
+    ext_modules=[Extension('cpredict', ['predict.c', 'pypredict.c'])]
     )
