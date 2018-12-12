@@ -324,7 +324,6 @@ void Calculate_RADec(double time, vector_t *pos, vector_t *vel, geodetic_t *geod
 
 /* .... SGP4/SDP4 functions end .... */
 
-time_t CurrentTime();
 double FixAngle(double x);
 double PrimeAngle(double x);
 
@@ -339,6 +338,7 @@ char *noradEvalue(double value);
 void Data2TLE(int x);
 double ReadBearing(char *input);
 char ReadTLE(char *line0, char *line1, char *line2);
+char ReadQTH();
 char ReadQTHFile();
 char CopyFile(char *source, char *destination);
 void SaveQTH();
@@ -360,6 +360,3 @@ double FindAOS();
 double FindLOS();
 double FindLOS2();
 double NextAOS();
-
-int MakeObservation(double obs_time, struct observation * obs);
-void PrintObservation(struct observation * obs);
