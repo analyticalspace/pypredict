@@ -147,6 +147,14 @@ typedef struct observation {
     char has_aos;
     char decayed;
     double doppler;
+    double inclination;
+    double raan;
+    double argument_perigee;
+    double perigee;
+    double eccentricity;
+    double semi_major_axis;
+    double mean_anomaly;
+    double bstar;
 } observation;
 
 typedef struct sat_struct{
@@ -168,6 +176,8 @@ typedef struct sat_struct{
        double nddot6;        // Nddot/6
        double bstar;         // Bstar Drag Term
        long orbitnum;        // Orbit Number
+       double aodp;          // Semi Major Axis
+
 } sat_struct;
 
 extern sat_struct sat;

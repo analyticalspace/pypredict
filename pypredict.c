@@ -90,39 +90,54 @@ int MakeObservation(double obs_time, struct observation * obs) {
     obs->has_aos = aoshappens;
     obs->decayed = decayed;
     obs->doppler = doppler100;
+    obs->inclination = sat.incl;
+    obs->raan = sat.raan;
+    obs->argument_perigee = sat.argper;
+    obs->eccentricity = sat.eccn;
+    obs->semi_major_axis = sat.aodp;
+    obs->mean_anomaly = sat.meanan;
+    obs->bstar = sat.bstar;
     return 0;
 }
 
 void PrintObservation(struct observation * obs) {
-    printf("NORAD_ID        %ld\n", obs->norad_id);
-    printf("Name            %s\n", obs->name);
-    printf("Date(epoch)     %f\n", obs->epoch);
-    printf("Latitude(N)     %f\n", obs->latitude);
-    printf("Longitude(E)    %f\n", obs->longitude);
-    printf("Azimuth         %f\n", obs->azimuth);
-    printf("Elevation       %f\n", obs->elevation);
-    printf("Velocity        %f\n", obs->orbital_velocity);
-    printf("Footprint       %f\n", obs->footprint);
-    printf("Altitude(km)    %f\n", obs->altitude);
-    printf("Slant_Range(km) %f\n", obs->slant_range);
-    printf("Eclipse_Depth   %f\n", obs->eclipse_depth);
-    printf("Orbital_Phase   %f\n", obs->orbital_phase);
-    printf("Orbital_Model   %s\n", obs->orbital_model);
-    printf("Visibility      %c\n", obs->visibility);
-    printf("Sunlight        %d\n", obs->sunlit);
-    printf("Orbit_Number    %ld\n",obs->orbit);
-    printf("Geostationary   %d\n", obs->geostationary);
-    printf("AOS_Happens     %d\n", obs->has_aos);
-    printf("Decayed         %d\n", obs->decayed);
-    printf("Doppler         %f\n", obs->doppler);
+    printf("NORAD_ID           %ld\n", obs->norad_id);
+    printf("Name               %s\n", obs->name);
+    printf("Date(epoch)        %f\n", obs->epoch);
+    printf("Latitude(N)        %f\n", obs->latitude);
+    printf("Longitude(E)       %f\n", obs->longitude);
+    printf("Azimuth            %f\n", obs->azimuth);
+    printf("Elevation          %f\n", obs->elevation);
+    printf("Velocity(km/h)     %f\n", obs->orbital_velocity);
+    printf("Footprint          %f\n", obs->footprint);
+    printf("Altitude(km)       %f\n", obs->altitude);
+    printf("Slant_Range(km)    %f\n", obs->slant_range);
+    printf("Eclipse_Depth      %f\n", obs->eclipse_depth);
+    printf("Orbital_Phase      %f\n", obs->orbital_phase);
+    printf("Orbital_Model      %s\n", obs->orbital_model);
+    printf("Visibility         %c\n", obs->visibility);
+    printf("Sunlight           %d\n", obs->sunlit);
+    printf("Orbit_Number       %ld\n",obs->orbit);
+    printf("Geostationary      %d\n", obs->geostationary);
+    printf("AOS_Happens        %d\n", obs->has_aos);
+    printf("Decayed            %d\n", obs->decayed);
+    printf("Doppler            %f\n", obs->doppler);
+    printf("Inclination        %f\n", obs->inclination);
+    printf("RAAN               %f\n", obs->raan);
+    printf("Arg Perigee        %f\n", obs->argument_perigee);
+    printf("Eccentricity       %f\n", obs->eccentricity);
+    printf("Semi Major Axis(km)%f\n", obs->semi_major_axis);
+    printf("Mean Anomaly       %f\n", obs->mean_anomaly);
+    printf("BStar              %f\n", obs->bstar);
+
 }
 
 PyObject * PythonifyObservation(observation * obs) {
     //TODO: Add reference count?
 #if PY_MAJOR_VERSION >= 3
-    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d}",
+    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
 #else
-    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d}",
+    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
 #endif
         "norad_id", obs->norad_id,
         "name", obs->name,
@@ -144,7 +159,14 @@ PyObject * PythonifyObservation(observation * obs) {
         "geostationary", obs->geostationary,
         "has_aos", obs->has_aos,
         "decayed", obs->decayed,
-        "doppler", obs->doppler
+        "doppler", obs->doppler,
+        "inclination", obs->inclination,
+        "raan", obs->raan,
+        "arg_perigee", obs->argument_perigee,
+        "eccentricity", obs->eccentricity,
+        "semi_major_axis", obs->semi_major_axis,
+        "mean_anomaly", obs->mean_anomaly,
+        "bstar", obs->bstar
     );
 }
 char load(PyObject *args) {

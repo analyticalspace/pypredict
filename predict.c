@@ -707,6 +707,7 @@ void SGP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 		delo=1.5*ck2*x3thm1/(ao*ao*betao*betao2);
 		xnodp=tle->xno/(1.0+delo);
 		aodp=ao/(1.0-delo);
+        sat.aodp = aodp*xkmper; // Get semi major axis in km
 
 		/* For perigee less than 220 kilometers, the "simple"     */
 		/* flag is set and the equations are truncated to linear  */
