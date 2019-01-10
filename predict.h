@@ -151,6 +151,7 @@ typedef struct observation {
     double raan;
     double argument_perigee;
     double perigee;
+    double apogee;
     double eccentricity;
     double semi_major_axis;
     double mean_anomaly;
@@ -177,6 +178,8 @@ typedef struct sat_struct{
        double bstar;         // Bstar Drag Term
        long orbitnum;        // Orbit Number
        double aodp;          // Semi Major Axis
+       double perigee;       // Perigee
+       double apogee;        // Apogee
 
 } sat_struct;
 

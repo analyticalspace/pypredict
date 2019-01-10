@@ -93,6 +93,8 @@ int MakeObservation(double obs_time, struct observation * obs) {
     obs->inclination = sat.incl;
     obs->raan = sat.raan;
     obs->argument_perigee = sat.argper;
+    obs->perigee = sat.perigee;
+    obs->apogee = sat.apogee;
     obs->eccentricity = sat.eccn;
     obs->semi_major_axis = sat.aodp;
     obs->mean_anomaly = sat.meanan;
@@ -125,6 +127,8 @@ void PrintObservation(struct observation * obs) {
     printf("Inclination        %f\n", obs->inclination);
     printf("RAAN               %f\n", obs->raan);
     printf("Arg Perigee        %f\n", obs->argument_perigee);
+    printf("Perigee            %f\n", obs->perigee);
+    printf("Apogee             %f\n", obs->apogee);
     printf("Eccentricity       %f\n", obs->eccentricity);
     printf("Semi Major Axis(km)%f\n", obs->semi_major_axis);
     printf("Mean Anomaly       %f\n", obs->mean_anomaly);
@@ -135,9 +139,9 @@ void PrintObservation(struct observation * obs) {
 PyObject * PythonifyObservation(observation * obs) {
     //TODO: Add reference count?
 #if PY_MAJOR_VERSION >= 3
-    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
+    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
 #else
-    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
+    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
 #endif
         "norad_id", obs->norad_id,
         "name", obs->name,
@@ -163,6 +167,8 @@ PyObject * PythonifyObservation(observation * obs) {
         "inclination", obs->inclination,
         "raan", obs->raan,
         "arg_perigee", obs->argument_perigee,
+        "perigee", obs->perigee,
+        "apogee", obs->apogee,
         "eccentricity", obs->eccentricity,
         "semi_major_axis", obs->semi_major_axis,
         "mean_anomaly", obs->mean_anomaly,

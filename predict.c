@@ -727,6 +727,8 @@ void SGP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 		s4=s;
 		qoms24=qoms2t;
 		perigee=(aodp*(1-tle->eo)-ae)*xkmper;
+        sat.perigee = perigee;
+        sat.apogee = (aodp*(1+tle->eo)-ae)*xkmper;
 
 		if (perigee<156.0)
 		{

@@ -1,49 +1,8 @@
-#!/usr/bin/env python
+from pprint import pprint
+import predict
 
-##
-# This test will only work if you modify the TLE, qth (ground station position) and 
-# timestamps to make any sense. The time.time() calls don't make sense and the old
-# timestamps there were too old for the propagator to work.
-# XXX XXX XXX
-#
+tle = '0 OBJECT NY\n1 43550U 98067NY  19009.55938219 +.00013482 +00000-0 +17279-3 0  9995\n2 43550 051.6378 066.3469 0004106 279.6394 080.4135 15.59492665028120'
 
+x = predict.observe(tle, [0,0,0])
 
-#import unittest, time
-#import predict
-#from cpredict import quick_find, quick_predict
-#
-## fetched from http://tle.spire.com/40044
-#TLE = "0 LEMUR 1\n1 40044U 14033AL  15013.74135905  .00002013  00000-0  31503-3 0  6119\n2 40044 097.9584 269.2923 0059425 258.2447 101.2095 14.72707190 30443"
-#QTH = (37.7727, 122.4070, 25)
-#STEP = 15
-#T1_IN_TRANSIT = time.time()
-#T2_NOT_IN_TRANSIT = T1_IN_TRANSIT + 86400
-#
-#
-#class TestPredict(unittest.TestCase):
-#
-#  def test_transits_are_truncated_if_the_overlap_the_start_or_end_times(self):
-#    tle = predict.massage_tle(TLE)
-#    qth = predict.massage_qth(QTH)
-#
-#    at  = T1_IN_TRANSIT
-#    obs = predict.observe(tle, qth, at=at)
-#    self.assertTrue(obs['elevation'] > 0)
-#
-#    at  = T2_NOT_IN_TRANSIT
-#    obs = predict.observe(tle, qth, at=at)
-#    self.assertTrue(obs['elevation'] < 0)
-#
-#    # should not raise a StopIteration
-#    next_transit = next(predict.transits(tle, qth, ending_after=at))
-#
-#
-#if __name__ == '__main__':
-#
-#  tests = [
-#    TestPredict
-#  ]
-#
-#  for test in tests:
-#    suite = unittest.TestLoader().loadTestsFromTestCase(test)
-#    unittest.TextTestRunner(verbosity=5).run(suite)
+pprint(x)
