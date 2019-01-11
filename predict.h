@@ -156,6 +156,12 @@ typedef struct observation {
     double semi_major_axis;
     double mean_anomaly;
     double bstar;
+    double x;
+    double y; 
+    double z;
+    double x_vel;
+    double y_vel;
+    double z_vel;
 } observation;
 
 typedef struct sat_struct{
@@ -180,6 +186,12 @@ typedef struct sat_struct{
        double aodp;          // Semi Major Axis
        double perigee;       // Perigee
        double apogee;        // Apogee
+       double x;
+       double y;
+       double z;
+       double x_vel;
+       double y_vel;
+       double z_vel;
 
 } sat_struct;
 

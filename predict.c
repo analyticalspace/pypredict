@@ -906,7 +906,15 @@ void SGP4(double tsince, tle_t * tle, vector_t * pos, vector_t * vel)
 	vel->x=rdotk*ux+rfdotk*vx;
 	vel->y=rdotk*uy+rfdotk*vy;
 	vel->z=rdotk*uz+rfdotk*vz;
-
+    
+    /*
+    sat.x = pos->x;
+    sat.y = pos->y;
+    sat.z = pos->z;
+    sat.x_vel = vel->x;
+    sat.y_vel = vel->y;
+    sat.z_vel = vel->z;
+    */
 	/* Phase in radians */
 	phase=xlt-xnode-omgadf+twopi;
     
@@ -2725,6 +2733,15 @@ void Calc()
 
 	Magnitude(&vel);
 	sat_vel=vel.w;
+    
+    
+    sat.x = pos.x;
+    sat.y = pos.y;
+    sat.z = pos.z;
+    sat.x_vel = vel.x;
+    sat.y_vel = vel.y;
+    sat.z_vel = vel.z;
+    
 
 	/** All angles in rads. Distance in km. Velocity in km/s **/
 	/* Calculate satellite Azi, Ele, Range and Range-rate */

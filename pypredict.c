@@ -99,6 +99,12 @@ int MakeObservation(double obs_time, struct observation * obs) {
     obs->semi_major_axis = sat.aodp;
     obs->mean_anomaly = sat.meanan;
     obs->bstar = sat.bstar;
+    obs->x = sat.x;
+    obs->y = sat.y;
+    obs->z = sat.z;
+    obs->x_vel = sat.x_vel;
+    obs->y_vel = sat.y_vel;
+    obs->z_vel = sat.z_vel;
     return 0;
 }
 
@@ -133,15 +139,20 @@ void PrintObservation(struct observation * obs) {
     printf("Semi Major Axis(km)%f\n", obs->semi_major_axis);
     printf("Mean Anomaly       %f\n", obs->mean_anomaly);
     printf("BStar              %f\n", obs->bstar);
-
+    printf("X                  %f\n", obs->x);
+    printf("Y                  %f\n", obs->y);
+    printf("Z                  %f\n", obs->z);
+    printf("X Velocity         %f\n", obs->x_vel);
+    printf("Y Velocity         %f\n", obs->y_vel);
+    printf("Z Velocity         %f\n", obs->z_vel);
 }
 
 PyObject * PythonifyObservation(observation * obs) {
     //TODO: Add reference count?
 #if PY_MAJOR_VERSION >= 3
-    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
+    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:C,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
 #else
-    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
+    return Py_BuildValue("{s:l,s:s,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:s,s:c,s:i,s:l,s:i,s:i,s:i,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d,s:d}",
 #endif
         "norad_id", obs->norad_id,
         "name", obs->name,
@@ -172,7 +183,13 @@ PyObject * PythonifyObservation(observation * obs) {
         "eccentricity", obs->eccentricity,
         "semi_major_axis", obs->semi_major_axis,
         "mean_anomaly", obs->mean_anomaly,
-        "bstar", obs->bstar
+        "bstar", obs->bstar,
+        "x", obs->x,
+        "y", obs->y,
+        "z", obs->z,
+        "x_vel", obs->x_vel,
+        "y_vel", obs->y_vel,
+        "z_vel", obs->z_vel
     );
 }
 char load(PyObject *args) {
