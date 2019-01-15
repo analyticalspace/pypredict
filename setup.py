@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 setup(
     name='pypredict',
-    version='2.1',
+    version='2.0',
     author="Jesse Trutna",
     author_email="jesse@spire.com",
     maintainer="Ben Gaudiosi",
