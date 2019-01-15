@@ -6,7 +6,7 @@ from cpredict import quick_find, quick_predict
 try:
     basestring
 except:
-	basestring = str
+    basestring = str
 
 def host_qth(path="~/.predict/predict.qth"):
     path = os.path.abspath(os.path.expanduser(path))
@@ -68,6 +68,36 @@ class Transit():
         self.qth = massage_qth(qth)
         self.start = start
         self.end = end
+
+        self.azimuth_start = observe(self.tle, self.qth, self.start)['azimuth']
+        self.azimuth_end = observe(self.tle, self.qth, self.end)['azimuth']
+        self.heading = self.find_heading()
+
+        # Orbital velocity from PyPredict is in km/h
+        self.peak_angular_rate = math.degrees(self.peak()['orbital_velocity'] / (self.peak()['slant_range']*3600))
+
+    def find_heading(self):
+        # First, convert compass to polar
+        c2p = lambda x: 90-x if 90-x >= 0 else (360+(90-x)) % 360
+
+        # Then, convert to radians
+        polar_1 = math.radians(c2p(self.azimuth_start))
+        polar_2 = math.radians(c2p(self.azimuth_end))
+
+        # Then, convert polar to cartesian
+        p2x = lambda x: (math.cos(x), math.sin(x))
+        (x1, y1) = p2x(polar_1)
+        (x2, y2) = p2x(polar_2)
+
+        (x, y) = (x2 - x1, y2-y1)
+
+        # Then, convert cartesian back to polar
+        phi = math.degrees(math.atan2(y, x))
+
+        # Finally, convert polar back to compass
+        p2c = lambda x: 90-x if 90-x >= 0 else (360+(90-x)) % 360
+        compass = p2c(phi)
+        return compass
 
     # return observation within epsilon seconds of maximum elevation
     # NOTE: Assumes elevation is strictly monotonic or concave over the [start,end] interval
