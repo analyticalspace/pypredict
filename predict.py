@@ -1,5 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+pypredict.predict
+~~~~~~~~~~~~~~~~~
+
+This module makes satellite observations and pass predictions using the SGP4 algorithm implemented in predict.c.
+"""
+
 import os
 import time
+import math
 from copy import copy
 from cpredict import quick_find, quick_predict
 
